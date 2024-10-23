@@ -1,0 +1,13 @@
+import { APIRequestContext } from '@playwright/test';
+import * as apiTypes from '@apiTypes/APISchemaTypes';
+
+export default class {{name}} {
+  request: APIRequestContext;
+  endpoint: string;
+
+  constructor(request: APIRequestContext) {
+    this.request = request;
+    this.endpoint = '{{pathCase name}}';
+  }
+
+}
