@@ -1,5 +1,5 @@
 {
-  "name": "audacia.testing.playwright.helper",
+  "name": "@audacia/playwright-helpers",
   "type": "module",
   "version": "1.0.0",
   "description": "",
