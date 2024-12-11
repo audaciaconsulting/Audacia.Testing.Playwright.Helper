@@ -11,16 +11,7 @@ export default function (plop: NodePlopAPI) {
   });
 
   plop.setGenerator('POM', {
-    description: 'Page Object Model',
-    prompts: [
-      {
-        name: 'name',
-        type: 'input',
-        message: 'POM name please (Please use PascalCasing): ',
-        validate: function (value) {
-          if (/^[A-Z][A-Za-z0-9]+$/.test(value)) { // Ensures PascalCase
-            return true;
-          }
+    descriptio
           return 'Please use PascalCase for the POM name (e.g., BookDetails).';
         },
       },
