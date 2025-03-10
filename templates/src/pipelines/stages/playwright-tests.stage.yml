@@ -1,0 +1,100 @@
+parameters:
+# Parameters allow for customization of the pipeline at runtime. They can be set manually or passed through pipeline triggers.
+- name: environmentName
+  displayName: Which Env to test against?
+  type: string
+  default: 'qa' # Sets 'qa' as the default environment to avoid accidentally running tests in the wrong environment.
+  values:
+    - dev # Development environment option.
+    - qa  # QA environment option.
+    - uat # UAT environment option.
+
+stages:
+  # Stages represent a sequence of jobs that are executed in the CI/CD process. This template defines a single stage for automation tests.
+  - stage: Automation_Tests
+    displayName: Automation Testing # A friendly name displayed in the CI/CD pipeline UI.
+
+    jobs:
+    # Jobs are a collection of steps that execute on an agent. In this case, all automation test steps are grouped under a single job.
+    - job: AutomationTests
+      displayName: 'Automation Tests'
+
+      variables:
+      # Variables can be used to store values that are reused in your pipeline. This example uses a variable group from Azure DevOps.
+      - group: 'Audacia.Tests.Playwright.QA' # This variable group should contain all necessary secrets and configurations for the QA environment, which is usually what you have configured in your .env file.
+
+      variables:
+      # Dynamically assign Azure DevOps variable group based on the environmentName parameter.
+      # This selection determines which set of environment-specific secrets and configurations are used. 
+      - ${{ if eq(parameters.environmentName, 'dev') }}:
+          - group: 'Audacia.Test.Playwright.DEV'  # Use this group for Development environment secrets and configurations.
+      - ${{ if eq(parameters.environmentName, 'qa') }}:
+          - group: 'Audacia.Test.Playwright.QA'  # Use this group for QA environment secrets and configurations.
+      - ${{ if eq(parameters.environmentName, 'uat') }}:
+          - group: 'Audacia.Test.Playwright.UAT' # Use this group for UAT environment secrets and configurations.
+
+      pool:
+        vmImage: "ubuntu-latest" # Specifies the virtual machine image to use for the job. This example uses the latest Ubuntu image.
+
+      steps:
+      # Steps define the sequence of tasks executed in the job. Each step can run scripts, tasks, or other job components.
+      - checkout: git://Audacia.Template.Testing.Playwright
+        displayName: "Checkout Repo" # Checks out the repository containing Playwright tests. This step is needed if this pipeline is not in the same repository as the tests.
+
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '18' # Specifies the Node.js version to use, ensuring consistency across environments.
+        displayName: 'Install Node.js'
+
+      - script: npm ci
+        displayName: 'npm ci' # Installs dependencies based on the package-lock.json file, ensuring consistent versions across builds.
+
+      - script: npx playwright install --with-deps
+        displayName: 'Install Playwright browsers' # Installs necessary browsers for Playwright tests, including dependencies.
+
+      - script: npm run generate-types
+        displayName: 'Generate type definitions from Swagger' # Generates TypeScript types from Swagger to facilitate API testing.
+
+      - script: npm run api-tests
+        displayName: 'Run API tests' # Executes API tests using the predefined npm script.
+
+      - task: PublishTestResults@2
+        displayName: 'Publish test results' # Collects and publishes test results, making them available in the pipeline summary.
+        inputs:
+          searchFolder: 'test-results'
+          testResultsFormat: 'JUnit'
+          testResultsFiles: 'junit-results.xml'
+          mergeTestResults: true
+          failTaskOnFailedTests: true
+          testRunTitle: 'My API Tests'
+        condition: always() # This ensures test results are published regardless of test outcomes. Successful, failed, or cancelled.
+
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Playwright report artifacts ${{ parameters.environmentName }}' # Publish Playwright reports as pipeline artifacts.
+        inputs:
+          targetPath: playwright-report
+          artifact: playwright-API-report
+          publishLocation: 'pipeline'
+        condition: always()
+
+      - script: npm run e2e-tests
+        displayName: 'Run End-To-End tests' # Execute end-to-end tests.
+
+      - task: PublishTestResults@2
+        displayName: 'Publish test results'
+        inputs:
+          searchFolder: 'test-results'
+          testResultsFormat: 'JUnit'
+          testResultsFiles: 'junit-results.xml'
+          mergeTestResults: true
+          failTaskOnFailedTests: true
+          testRunTitle: 'My End-To-End Tests'
+        condition: always() 
+
+      - task: PublishPipelineArtifact@1
+        displayName: 'Publish Playwright report artifacts ${{ parameters.environmentName }}' # Similar to the API report, this step publishes end-to-end test reports for archival and review.
+        inputs:
+          targetPath: playwright-report
+          artifact: playwright-E2E-report
+          publishLocation: 'pipeline'
+        condition: always() # Always execute this step.

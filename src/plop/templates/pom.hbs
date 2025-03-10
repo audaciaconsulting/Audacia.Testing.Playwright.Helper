@@ -1,0 +1,17 @@
+import { Page } from '@fixtures/baseTest';
+
+export default class {{name}}Page {
+  page: Page;
+
+  constructor(page: Page) {
+    this.page = page;
+  }
+
+  // Page Selectors
+
+  // Actions
+  public async goto() {
+    await this.page.goto('', { waitUntil: 'domcontentloaded' });
+    await this.page.evaluate(() => document.fonts.ready);
+  }
+}
