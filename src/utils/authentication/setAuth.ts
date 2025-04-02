@@ -7,19 +7,14 @@ import { BrowserContext, Page } from '@playwright/test';
 const baseURL = process.env.BASE_URL;
 
 /**
- * Initialise the session storage key, which will be used to store user authentication data with.
- * Find the key by inspecting the application's session storage manually.
- */
-const sessionStorageKey = '';
-
-/**
  * Sets the session storage for a given page or context.
  * 
  * @param {Page | BrowserContext} pageOrContext - The page or context to set the session storage for.
  * @param {any} userAuthData - The user authentication data to be stored in the session storage.
+ * @param {string} sessionStorageKey - The key to store the session storage data with. (Find this key by inspecting the application's session storage manually)
  * @returns {Promise<void>} - A promise that resolves when the session storage is set.
  */
-export async function setSession(pageOrContext: Page | BrowserContext, userAuthData: any): Promise<void> {
+export async function setSession(pageOrContext: Page | BrowserContext, userAuthData: any, sessionStorageKey: string): Promise<void> {
 
   // Set session storage in our context or page
   await pageOrContext.addInitScript(({ storageData, domain }) => {

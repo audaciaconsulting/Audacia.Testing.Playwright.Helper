@@ -1,0 +1,19 @@
+# Disable automatic triggering for this pipeline. 
+# This means the pipeline won't run automatically on code changes.
+trigger: none
+
+# Define scheduled triggers for this pipeline.
+schedules:
+- cron: "0 22 * * 1-5" # This cron schedule translates to "run at 22:00 (10 PM) every weekday (Monday to Friday)."
+  displayName: Daily tests on QA env # A friendly name for the schedule, indicating its purpose.
+  branches:
+    include:
+    - main # Specifies that this schedule only applies to the main branch.
+  always: true # Ensures the pipeline runs even if there have been no code changes since the last successful run.
+
+# Define the stages of the pipeline. 
+# Stages are major divisions in a pipeline, usually representing a significant phase in the CI/CD process.
+stages:
+  - template: stages/playwright-tests.stage.yml # This references an external YAML file to define the stage.
+    parameters:
+      environmentName: 'qa' # Passes a parameter to the stage template, specifying that tests should run against the QA environment.

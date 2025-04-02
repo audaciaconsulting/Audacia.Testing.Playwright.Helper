@@ -1,7 +1,7 @@
 import { APIRequestContext } from '@playwright/test';
-import { MailtrapAttachment } from '../types/mailtrap/mailtrapAttachment.js';
-import { MailtrapEmail } from '../types/mailtrap/mailtrapEmail.js';
-import { MailtrapContentType } from '../types/mailtrap/mailtrapContentType.enum.js';
+import { MailtrapAttachment } from '../types/mailtrap/mailtrapAttachment';
+import { MailtrapEmail } from '../types/mailtrap/mailtrapEmail';
+import { MailtrapContentType } from '../types/mailtrap/mailtrapContentType.enum';
 
 export class MailtrapHelper {
   private request: APIRequestContext;

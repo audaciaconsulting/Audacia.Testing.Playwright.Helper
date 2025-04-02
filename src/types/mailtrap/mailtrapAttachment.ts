@@ -5,7 +5,7 @@ export interface MailtrapAttachment {
   attachment_type: string;
   content_type: string;
   content_id?: string;
-  trasnfer_encoding?: string;
+  transfer_encoding?: string;
   attachment_size: number;
   created_at: string;
   updated_at: string;

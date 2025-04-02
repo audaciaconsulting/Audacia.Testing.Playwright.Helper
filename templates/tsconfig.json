@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "strictNullChecks": false,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "noUncheckedIndexedAccess": true,
+    "typeRoots": ["./node_modules/@types"],
+    "paths": {
+      "@utils/*": ["src/utils/*"],
+      "@fixtures/*": ["src/fixtures/*"],
+      "@apiTypes/*": ["src/types/*"],
+      "@pages/*": ["src/pages/*"]
+    }
+  }
+}

@@ -1,5 +1,6 @@
 import { test, expect, Page, TestInfo } from '@playwright/test';
 import { lightHouseThresholds } from './lighthouseConfig.js';
+import { playAudit } from 'playwright-lighthouse';
 import path from 'path';
 
 /**
@@ -21,9 +22,6 @@ export async function runLighthouseAudit(
 
   const reportDirectory = path.join(process.cwd(), 'playwright-lighthouse-report', testInfo.testId);
   const reportName = 'lighthouse-report.html';
-
-  // Dynamically import playAudit
-  const { playAudit } = await import('playwright-lighthouse');
 
   // Step 1: Run the Lighthouse audit
   await test.step('Run Lighthouse audit', async () => {

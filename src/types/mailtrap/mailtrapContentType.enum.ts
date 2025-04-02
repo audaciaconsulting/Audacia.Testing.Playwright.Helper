@@ -1,4 +1,4 @@
 export enum MailtrapContentType {
-    Html,
-    Text
+  Html,
+  Text
 }

@@ -1,6 +1,13 @@
 # Audacia Playright Helpers
 
 # Playwright Helpers
+[Description]
+
+# Getting Started
+Initialize a new project by running this command:
+```bash
+npx playwright-proj init
+```
 
 # File Scaffolding (with Plop)
 
@@ -41,18 +48,18 @@ $env:AZURE_DEVOPS_PAT="your_personal_access_token"
 
 ### 2. Run the Script
 ```bash
-npx pw-debug <url>
+npm run pw:debug <url>
 ```
 Replace `<url>` with the URL of the artifact or test result you want to download.
 
 **Example:**
 ```bash
-npx pw-debug https://dev.azure.com/your_org/your_project/_build/results?buildId=123&view=artifacts&type=publishedArtifacts
+npm run pw:debug "https://dev.azure.com/your_org/your_project/_build/results?buildId=123&view=artifacts&type=publishedArtifacts"
 ```
 
-## Notes
+### Notes
 - The Personal Access Token (PAT) is sensitive information. Do not share or commit it to source control.
 - For persistent usage, consider adding the `export` command to your shell profile (e.g., `~/.bashrc` or `~/.bash_profile`).
 
-## How to Create a PAT
+### How to Create a PAT
 Follow the official Microsoft documentation: [Create a PAT](https://learn.microsoft.com/en-us/azure/devops/organizations/accounts/use-personal-access-tokens-to-authenticate)
